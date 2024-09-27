@@ -2,3 +2,6 @@ python-telegram-bot==13.13
 requests
 beautifulsoup4
 pipenv
+uvicorn
+fastapi[all]
+uvicorn[standard]
