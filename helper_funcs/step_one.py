@@ -28,6 +28,12 @@ def request_tg_code_get_random_hash(input_phone_number):
     request_data = {
         "phone": input_phone_number
     }
-    response_c = requests.post(request_url, data=request_data)
-    json_response = response_c.json()
-    return json_response["random_hash"]
+    try:
+        response_c = requests.post(request_url, data=request_data)
+        if response.status_code != 200:
+            return None
+        json_response = response_c.json()
+        return json_response["random_hash"]
+    except requests.exceptions.ConnectionError as e:
+        print(str(e))
+        return "Error blocking server"
