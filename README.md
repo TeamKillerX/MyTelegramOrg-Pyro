@@ -1,10 +1,8 @@
 ---
-title: Apidbot
-emoji: ⚡
-colorFrom: indigo
-colorTo: purple
+title: TelegramRobot-Pyro
 sdk: docker
 pinned: false
 ---
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+• Credits source code original : `https://github.com/SpEcHiDe/MyTelegramOrgRoBot/`
+
