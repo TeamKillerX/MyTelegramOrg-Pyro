@@ -44,8 +44,7 @@ app = Client(
 async def start(client: Client, message: Message):
     """ ConversationHandler entry_point /start """
     await message.reply_text(
-        Config.START_TEXT,
-        parse_mode="html"
+        Config.START_TEXT
     )
     GLOBAL_USERS_DICTIONARY[message.from_user.id] = {"state": INPUT_PHONE_NUMBER}
 
@@ -66,8 +65,7 @@ async def input_phone_number(client: Client, message: Message):
     input_text = get_phno_imn_ges(message)
     if input_text is None:
         await message.reply_text(
-            text=Config.IN_VALID_PHNO_PVDED,
-            parse_mode="html"
+            text=Config.IN_VALID_PHNO_PVDED
         )
         return
     random_hash = request_tg_code_get_random_hash(input_text)
@@ -77,8 +75,7 @@ async def input_phone_number(client: Client, message: Message):
         "state": INPUT_TG_CODE
     }
     await message.reply_text(
-        Config.AFTER_RECVD_CODE_TEXT,
-        parse_mode="html"
+        Config.AFTER_RECVD_CODE_TEXT
     )
 
 
@@ -91,8 +88,7 @@ async def input_tg_code(client: Client, message: Message):
     provided_code = extract_code_imn_ges(message)
     if provided_code is None:
         await aes_mesg_i.edit_text(
-            text=Config.IN_VALID_CODE_PVDED,
-            parse_mode="html"
+            text=Config.IN_VALID_CODE_PVDED
         )
         GLOBAL_USERS_DICTIONARY[user.id]["state"] = INPUT_PHONE_NUMBER
         return
@@ -124,7 +120,7 @@ async def input_tg_code(client: Client, message: Message):
                 response_dv
             )
             me_t += "\n\n" + Config.FOOTER_TEXT
-            await aes_mesg_i.edit_text(text=me_t, parse_mode="html")
+            await aes_mesg_i.edit_text(text=me_t)
         else:
             LOGGER.warning("Creating APP ID caused error %s", response_dv)
             await aes_mesg_i.edit_text(Config.ERRED_PAGE)
