@@ -18,7 +18,13 @@
 """ STEP ONE """
 
 import requests
+import logging
 
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+LOGGER = logging.getLogger(__name__)
 
 def request_tg_code_get_random_hash(input_phone_number):
     """ requests Login Code
@@ -35,4 +41,4 @@ def request_tg_code_get_random_hash(input_phone_number):
         json_response = response_c.json()
         return json_response["random_hash"]
     except requests.exceptions.ConnectionError as e:
-        print(str(e))
+        LOGGER.info(str(e))
