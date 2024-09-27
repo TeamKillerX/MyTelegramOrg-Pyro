@@ -19,6 +19,13 @@
 
 import requests
 from bs4 import BeautifulSoup
+import logging
+
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+LOGGER = logging.getLogger(__name__)
 
 
 def scarp_tg_existing_app(stel_token):
@@ -28,26 +35,22 @@ def scarp_tg_existing_app(stel_token):
     custom_header = {
         "Cookie": stel_token
     }
-    response_c = requests.get(request_url, headers=custom_header)
+    try:
+        response_c = requests.get(request_url, headers=custom_header)
+    except requests.exceptions.ConnectionError as e:
+        LOGGER.info(str(e)) 
     response_text = response_c.text
-    # print(response_text)
     soup = BeautifulSoup(response_text, features="html.parser")
     title_of_page = soup.title.string
-    #
     re_dict_vals = {}
     re_status_id = None
     if "configuration" in title_of_page:
-        # print(soup.prettify())
         g_inputs = soup.find_all("span", {"class": "input-xlarge"})
-        # App configuration
         app_id = g_inputs[0].string
         api_hash = g_inputs[1].string
-        # Available MTProto servers
         test_configuration = g_inputs[4].string
         production_configuration = g_inputs[5].string
-        # It is forbidden to pass this value to third parties.
         _a = "It is forbidden to pass this value to third parties."
-        #
         hi_inputs = soup.find_all("p", {"class": "help-block"})
         test_dc = hi_inputs[-2].text.strip()
         production_dc = hi_inputs[-1].text.strip()
@@ -68,7 +71,6 @@ def scarp_tg_existing_app(stel_token):
             },
             "Disclaimer": _a
         }
-        #
         re_status_id = True
     else:
         tg_app_hash = soup.find("input", {"name": "hash"}).get("value")
