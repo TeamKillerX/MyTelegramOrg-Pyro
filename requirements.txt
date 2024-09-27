@@ -5,3 +5,4 @@ pipenv
 uvicorn
 fastapi[all]
 uvicorn[standard]
+python-dotenv
