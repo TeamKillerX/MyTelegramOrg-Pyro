@@ -22,7 +22,6 @@ if WEBHOOK:
 else:
     from config import Development as Config
 
-# Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
@@ -64,11 +63,14 @@ async def input_phone_number(client: Client, message: Message):
     user = message.from_user
     input_text = get_phno_imn_ges(message)
     if input_text is None:
-        await message.reply_text(
+        return await message.reply_text(
             text=Config.IN_VALID_PHNO_PVDED
         )
-        return
     random_hash = request_tg_code_get_random_hash(input_text)
+    if random_hash is None:
+        return await message.reply_text(
+            text="Error blocking server DNS"
+        )
     GLOBAL_USERS_DICTIONARY[user.id] = {
         "input_phone_number": input_text,
         "random_hash": random_hash,
@@ -93,7 +95,6 @@ async def input_tg_code(client: Client, message: Message):
         GLOBAL_USERS_DICTIONARY[user.id]["state"] = INPUT_PHONE_NUMBER
         return
 
-    # Login and get cookie
     status_r, cookie_v = login_step_get_stel_cookie(
         current_user_creds.get("input_phone_number"),
         current_user_creds.get("random_hash"),
@@ -126,7 +127,6 @@ async def input_tg_code(client: Client, message: Message):
             await aes_mesg_i.edit_text(Config.ERRED_PAGE)
     else:
         await aes_mesg_i.edit_text(cookie_v)
-
     del GLOBAL_USERS_DICTIONARY[user.id]
 
 
