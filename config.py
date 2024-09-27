@@ -29,7 +29,6 @@ class Config:
         "APP_DESCRIPTION",
         "created using https://telegram.dog/xtdevs"
     )
-    #
     FOOTER_TEXT = os.environ.get("FTEXT", "@rencprx")
     START_TEXT = os.environ.get("START_TEXT", Translation.START_TEXT)
     AFTER_RECVD_CODE_TEXT = os.environ.get(
