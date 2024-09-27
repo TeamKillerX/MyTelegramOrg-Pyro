@@ -1,5 +1,5 @@
 ---
-title: TelegramRobot-Pyro
+title: MyTelegramOrg-Pyro
 sdk: docker
 pinned: false
 ---
