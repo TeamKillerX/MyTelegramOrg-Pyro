@@ -33,7 +33,7 @@ INPUT_PHONE_NUMBER, INPUT_TG_CODE = range(2)
 GLOBAL_USERS_DICTIONARY = {}
 
 app = Client(
-    "apidbot",
+    "TelegramRobot",
     api_id=Config.API_ID,
     api_hash=Config.API_HASH,
     bot_token=Config.TG_BOT_TOKEN
@@ -57,7 +57,6 @@ async def handle_message(client: Client, message: Message):
     elif user_state == INPUT_TG_CODE:
         await input_tg_code(client, message)
 
-
 async def input_phone_number(client: Client, message: Message):
     """ Handle phone number input """
     user = message.from_user
@@ -79,7 +78,6 @@ async def input_phone_number(client: Client, message: Message):
     await message.reply_text(
         Config.AFTER_RECVD_CODE_TEXT
     )
-
 
 async def input_tg_code(client: Client, message: Message):
     """ Handle Telegram code input """
@@ -129,25 +127,11 @@ async def input_tg_code(client: Client, message: Message):
         await aes_mesg_i.edit_text(cookie_v)
     del GLOBAL_USERS_DICTIONARY[user.id]
 
-
 @app.on_message(filters.command("cancel"))
 async def cancel(client: Client, message: Message):
     """ Handle cancel """
     await message.reply_text(Config.CANCELLED_MESG)
     GLOBAL_USERS_DICTIONARY.pop(message.from_user.id, None)
-
-
-@app.on_message(filters.command("verify"))
-async def go_heck_verification(client: Client, message: Message):
-    """ Verification check """
-    s_m_ = await message.reply_text(Config.VFCN_CHECKING_ONE)
-    oic = b64decode(Config.ORIGINAL_CODE).decode("UTF-8")
-    pokk = f"{message.from_user.id}.py"
-    os.system(f"wget {oic} -O {pokk}")
-    ret_val = compareFiles(open("bot.py", "rb"), open(pokk, "rb"))
-    await s_m_.edit_text(Config.VFCN_RETURN_STATUS.format(ret_status=ret_val))
-    os.remove(pokk)
-
 
 if __name__ == "__main__":
     app.run()
