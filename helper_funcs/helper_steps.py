@@ -1,5 +1,7 @@
 import logging
+import re
 from pyrogram.types import Message
+from pyrogram.enums import MessageEntityType
 
 # Enable logging
 logging.basicConfig(
@@ -32,7 +34,6 @@ def parse_to_meaning_ful_text(input_phone_number, in_dict):
 
     return me_t
 
-
 def extract_code_imn_ges(pyro_message: Message):
     """ Extracts the input message and returns the Telegram Web login code """
     telegram__web_login_code = None
@@ -50,29 +51,32 @@ def extract_code_imn_ges(pyro_message: Message):
 
     return telegram__web_login_code
 
-
 def get_phno_imn_ges(pyro_message: Message):
-    """ Gets the phone number (in international format) from the input message """
+    """Gets the phone number (in international format) from the input message and validates it."""
     LOGGER.info(pyro_message)
     my_telegram_ph_no = None
-
+    phone_pattern = re.compile(r"^\+?\d{7,15}$")
     if pyro_message.text is not None:
         if pyro_message.entities is not None:
             for c_entity in pyro_message.entities:
-                if c_entity.type == "phone_number":
-                    # In Pyrogram, `c_entity.offset` and `c_entity.length` work similarly
+                if c_entity.type == MessageEntityType.PHONE_NUMBER:
                     my_telegram_ph_no = pyro_message.text[
                         c_entity.offset:c_entity.offset + c_entity.length
                     ]
-        else:
+                    break
+
+        if my_telegram_ph_no is None:
             my_telegram_ph_no = pyro_message.text
 
     elif pyro_message.contact is not None:
-        # Pyrogram provides `contact.phone_number` directly from the `contact` field
-        if pyro_message.contact.phone_number != "":
+        if pyro_message.contact.phone_number:
             my_telegram_ph_no = pyro_message.contact.phone_number
 
-    return my_telegram_ph_no
+    if my_telegram_ph_no and phone_pattern.match(my_telegram_ph_no):
+        return my_telegram_ph_no
+    else:
+        LOGGER.error("Sorry, but the input does not seem to be a valid phone number.")
+        return None
 
 
 def compareFiles(first, second):
