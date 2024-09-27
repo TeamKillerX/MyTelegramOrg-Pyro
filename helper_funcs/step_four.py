@@ -19,7 +19,13 @@
 
 import random
 import requests
+import logging
 
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+LOGGER = logging.getLogger(__name__)
 
 def create_new_tg_app(
         stel_token,
@@ -53,4 +59,4 @@ def create_new_tg_app(
         )
         return response_c
     except requests.exceptions.ConnectionError as e:
-        pass
+        LOGGER.info(str(e))
