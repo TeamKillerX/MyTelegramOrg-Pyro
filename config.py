@@ -54,7 +54,6 @@ class Config:
         Translation.IN_VALID_PHNO_PVDED
     )
     VFCN_CHECKING_ONE = "\"It is a beautiful and terrible thing, and should therefore be treated with great caution.\""
-    ORIGINAL_CODE = "aHR0cHM6Ly9odWdnaW5nZmFjZS5jby9zcGFjZXMvcmFuZHlkZXYvYXBpZGJvdC9yYXcvbWFpbi9ib3QucHk="
     VFCN_RETURN_STATUS = "'compareFiles' returned '{ret_status}'."
 
 class Development(Config):
