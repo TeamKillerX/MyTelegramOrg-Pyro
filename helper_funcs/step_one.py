@@ -36,4 +36,3 @@ def request_tg_code_get_random_hash(input_phone_number):
         return json_response["random_hash"]
     except requests.exceptions.ConnectionError as e:
         print(str(e))
-        return "Error blocking server"
