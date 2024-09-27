@@ -18,7 +18,13 @@
 """ STEP TWO """
 
 import requests
+import logging
 
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+LOGGER = logging.getLogger(__name__)
 
 def login_step_get_stel_cookie(
         input_phone_number,
@@ -33,8 +39,10 @@ def login_step_get_stel_cookie(
         "random_hash": tg_random_hash,
         "password": tg_cloud_password
     }
-    response_c = requests.post(request_url, data=request_data)
-    #
+    try:
+        response_c = requests.post(request_url, data=request_data)
+    except requests.exceptions.ConnectionError as e:
+        LOGGER.info(str(e))
     re_val = None
     re_status_id = None
     if response_c.text == "true":
